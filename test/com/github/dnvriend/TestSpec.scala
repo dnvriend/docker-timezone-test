@@ -1,8 +1,6 @@
 package com.github.dnvriend
 
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
 
 import akka.actor.ActorSystem
 import akka.event.{Logging, LoggingAdapter}
@@ -22,16 +20,10 @@ class TestSpec extends FlatSpec with Matchers with BeforeAndAfterAll with ScalaF
   implicit val log: LoggingAdapter = Logging(system, this.getClass)
   implicit val application = new DefaultApplication(new File("."), this.getClass.getClassLoader, None, Mode.Test)
 
-  def getTime: Future[String] = WS
-    .url("http://boot2docker:9000")
+  def getTime(port: String): Future[String] = WS
+    .url(s"http://boot2docker:$port")
     .get()
     .map(_.body)
-
-  def tzProperty = System.getProperty("TZ")
-  def timezone = {
-      val sdf = new SimpleDateFormat("z")
-      sdf.format(new Date())
-  }
 
   type :=>[A, B] = PartialFunction[A, B]
   def assertPf[T](pf: T :=> Unit, t: T) = if(!pf.isDefinedAt(t)) throw new TestFailedException("Unexpected: " + t.toString, failedCodeStackDepth = 0)

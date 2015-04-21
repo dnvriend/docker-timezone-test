@@ -8,11 +8,31 @@ import spray.json._
 
 case class DateTime(date: String, millisSinceEpochGMT: Long, offsetUTC: String, timezone: String)
 
+object Rfc822 {
+  val fullDateTimeWithMillis: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"
+}
+
+object Iso8601 {
+  val fullDateTimeWithMillis: String = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+
+  val fullDateTimeWithSeconds: String = "yyyy-MM-dd'T'HH:mm:ssXXX"
+
+  val fullDateTimeWithMinutes: String = "yyyy-MM-dd'T'HH:mmXXX"
+}
+
 trait DateTimeJsonFormat extends DefaultJsonProtocol {
+
+  // yes, I know, but I like spray-json
   implicit val dateTimeJsonFormat = jsonFormat4(DateTime)
 
   def dateTime: DateTime = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ")
+    // ISO-8601 date-time with UTC timezone format: http://en.wikipedia.org/wiki/ISO_8601
+    val sdf = new SimpleDateFormat(Iso8601.fullDateTimeWithMillis)
+
+    // If no UTC relation information is given with a time representation, the time is assumed to be in local time.
+    // While it may be safe to assume local time when communicating in the same time zone, it is ambiguous when used in
+    // communicating across different time zones. It is usually preferable to indicate a time zone (zone designator) using the
+    // standard's notation.
 
     // UTC – The World's Time Standard
     // Coordinated Universal Time (UTC) is the basis for civil time today. This 24-hour time standard is kept using highly precise
@@ -45,6 +65,7 @@ trait DateTimeJsonFormat extends DefaultJsonProtocol {
   /**
    * see: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
    * see: http://www.w3schools.com/schema/schema_dtypes_date.asp
+   * see: http://en.wikipedia.org/wiki/Time_zone
    * @return ThreeLetterISO8601TimeZone: Sign TwoDigitHours : Minutes
    */
   def offsetUTC: String = {
@@ -52,6 +73,10 @@ trait DateTimeJsonFormat extends DefaultJsonProtocol {
     sdf.format(new Date)
   }
 
+  /**
+   * Returns the
+   * @return
+   */
   def timezone: String = {
     val sdf = new SimpleDateFormat("z")
     sdf.format(new Date)

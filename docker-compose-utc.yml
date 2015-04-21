@@ -1,5 +1,0 @@
-
-timezone:
-  build: .
-  ports:
-    - 9000

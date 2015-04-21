@@ -1,0 +1,54 @@
+
+# List of timezones: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+
+# DST = Daylight Saving Time
+
+# launch instance that runs in LA
+losangelas:
+  build: .
+  environment:
+    - "TZ=America/Los_Angeles" # offset = -08:00 / DST -07:00
+  ports:
+    - 8998:9000
+
+# launch instance that runs in NY
+newyork:
+  build: .
+  environment:
+    - "TZ=America/New_York" # offset = -05:00 / DST -04:00
+  ports:
+    - 8999:9000
+
+
+# launch instance that runs .. well, nowhere? UTC is not a timezone
+utc:
+  build: .
+  environment:
+    - "TZ=UTC" # offset = +00:00 -> Note, UTC does not have DST, also GMT has no DST!
+  ports:
+    - 9000:9000
+
+# launch instance that runs in London
+london:
+  build: .
+  environment:
+    - "TZ=Europe/London" # offset = 00:00 / DST +01:00
+  ports:
+    - 9001:9000
+
+# launch instance that runs in Amsterdam
+amsterdam:
+  build: .
+  environment:
+    - "TZ=Europe/Amsterdam" # offset +01:00 / DST +02:00
+  ports:
+    - 9002:9000
+
+# launch instance that runs in Japan
+japan:
+  build: .
+  environment:
+    - "TZ=Japan" # offset +09:00 / DST +09:00
+  ports:
+    - 9003:9000
+

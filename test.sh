@@ -1,5 +1,5 @@
 #!/bin/bash
-export COMPOSE_FILE=docker-compose-europe-amsterdam.yml
+export COMPOSE_FILE=docker-compose.yml
 activator clean universal:packageZipTarball
 docker-compose kill
 docker-compose rm --force
