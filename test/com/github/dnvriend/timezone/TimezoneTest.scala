@@ -64,13 +64,16 @@ class TimezoneTest extends TestSpec {
   "ISO-8601 formatted Zulu dateTime" should "not be the same as local time where assumption is that the timezone is CEST" in {
     val localTime = "2015-04-21T20:00:00"
     val timeUTC =   "2015-04-21T20:00:00Z" // 'Z' is canonical form for +00:00
-    // the assumption is that localTime is a date time formatted without UTC offset and timezone is CEST
-    // when in GMT it could be equal...
-    timezone shouldBe "CEST"
+    // timezone should not be GMT, else the localtime and zulu time could be the same,
+    // when in Amsterdam.. oh well
+    timezone match {
+      case "GMT" => fail("Should not be GMT")
+      case _ =>
+    }
     parse(localTime, "yyyy-MM-dd'T'HH:mm:ss") should not be parse(timeUTC, "yyyy-MM-dd'T'HH:mm:ssXXX")
   }
 
-  "ISO-8601 fullDateTime" should "london == amstedam in epoch difference" in {
+  "ISO-8601 fullDateTime" should "london == amsterdam in epoch difference" in {
     // cannot be parsed because the time format is different (no millis)
     intercept[ParseException] {
       parse(londonTime, Iso8601.fullDateTimeWithSeconds) shouldBe parse(amsterdamTime, Iso8601.fullDateTimeWithSeconds)
