@@ -4,7 +4,7 @@
 # DST = Daylight Saving Time
 
 # launch instance that runs in LA
-losangelas:
+losangeles:
   build: .
   environment:
     - "TZ=America/Los_Angeles" # offset = -08:00 / DST -07:00
