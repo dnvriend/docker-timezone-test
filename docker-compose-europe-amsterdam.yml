@@ -1,0 +1,7 @@
+
+timezone:
+  build: .
+  environment:
+    - "TZ=Europe/Amsterdam"
+  ports:
+    - 9000

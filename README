@@ -1,0 +1,3 @@
+docker-timezone-test
+====================
+Shows how to package your docker application and how to handle timezones and time correctly.

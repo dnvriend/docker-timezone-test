@@ -1,0 +1,5 @@
+
+# Home page
+GET     /                           controllers.Application.index
+
+POST    /                           controllers.Application.postDate
