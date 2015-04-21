@@ -8,10 +8,22 @@ import spray.json._
 
 case class DateTime(date: String, millisSinceEpochGMT: Long, offsetUTC: String, timezone: String)
 
+/**
+ * I RFC-822 only allows the 8 North American time zones to be named (4 standard time, 4 daylight savings time);
+ * for all others, you have to specify the hour offset.
+ *
+ * see: http://www.w3.org/Protocols/rfc822/
+ */
 object Rfc822 {
   val fullDateTimeWithMillis: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"
 }
 
+/**
+ * ISO 8601 applies to representations and formats of dates in the Gregorian calendar, times based on the 24-hour
+ * timekeeping system (including optional time zone information), time intervals and combinations thereof.
+ *
+ * see: http://en.wikipedia.org/wiki/ISO_8601
+ */
 object Iso8601 {
   val fullDateTimeWithMillis: String = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
 
@@ -59,6 +71,9 @@ trait DateTimeJsonFormat extends DefaultJsonProtocol {
     // because an object must be initialized.
     val millisSinceEpochGMT = System.currentTimeMillis()
 
+    // for xml, the xs:dateTime has the following definition: http://www.w3.org/TR/xmlschema-2/#dateTime
+    // It follows the ISO-8601 standard, in which the timezone is encodes UTC with Z, and offset +/-00:00 (hr:min)
+
     DateTime(sdf.format(new Date(millisSinceEpochGMT)), millisSinceEpochGMT, offsetUTC, timezone)
   }
 
@@ -74,7 +89,7 @@ trait DateTimeJsonFormat extends DefaultJsonProtocol {
   }
 
   /**
-   * Returns the
+   * Returns the timezone
    * @return
    */
   def timezone: String = {
