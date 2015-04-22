@@ -55,6 +55,32 @@ class TimezoneTest extends TestSpec {
     parse(laTime) shouldBe parse(japanTime)
   }
 
+  // see: http://tempus-js.com/blog/the-iso-8601-101/
+  "ISO-8601 date" should "parse formats" in {
+    // ISO-8601 is very flexible in the formatting of the date; YYYY would be a valid ISO date,
+    // as would YYYY-MM, YYYY-MM-DDTHH. You can supply the time zone, or omit it, up to you.
+    // You can only omit going down though, so a date like MM-DD isn’t valid, because it is missing the year.
+
+    // ISO-8601 is very flexible. You can also do crazy stuff like provide seconds to as many decimal places
+    // as you want. So a date like 2009-09-09T09:09:09.00000000000000000009 is totally valid. ISO8601’s biggest
+    // gain is also its biggest pain, which makes it very difficult to code a reliable parser for the standard.
+    // Some small but annoying quirks to look out for are:
+
+    // - Unlimited decimals allowed for seconds,
+    // - The 'T' separator between the date and time can be pretty much anything
+    // - time zone can be omitted, or Z,
+    // - it can have a : to separate hours from minutes, or not.
+
+    // Of course all of this also means that different languages can and will do different stuff with ISO8601. For example languages
+    // like Python and .NET will use 6 decimal places (microseconds) for seconds, while languages like PHP and JavaScript will use 3.
+    // Python allows you to change the ‘T’ separator at your whim, and also by default will omit any time zone data, not even add a Z,
+    // meanwhile JavaScript and other languages will always use ‘T’ and if no time zone data is present, will use Z for the time zone.
+
+    // 6 characters for decimal
+    parse("2015-02-08T19:47:29.028751+01:00", "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX") shouldBe a[java.lang.Long]
+    parse("2015-02-06T15:52:48.814+01:00") shouldBe a [java.lang.Long]
+  }
+
   "ISO-8601 fullDateTimeWithMillis" should "be the same japan is 00:00:00 next day" in {
     val laTimePrevDay =    "2015-01-01T07:00:00.000-08:00" // note: 2015-01-01
     val japanTimeNextDay = "2015-01-02T00:00:00.000+09:00" // note: the next day!
