@@ -87,6 +87,12 @@ class TimezoneTest extends TestSpec {
     parse(laTimePrevDay) shouldBe parse(japanTimeNextDay)
   }
 
+  it should "make no difference, the number of millis" in {
+    val amsterdamTimeThree = "2015-01-01T12:00:00.123+02:00"
+    val amsterdamTimeSix   = "2015-01-01T12:00:00.000123+02:00"
+    parse(amsterdamTimeThree, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX") shouldBe parse(amsterdamTimeSix, "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX")
+  }
+
   "ISO-8601 formatted Zulu dateTime" should "not be the same as local time where assumption is that the timezone is CEST" in {
     val localTime = "2015-04-21T20:00:00"
     val timeUTC =   "2015-04-21T20:00:00Z" // 'Z' is canonical form for +00:00
